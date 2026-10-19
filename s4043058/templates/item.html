@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import item_card, pager, review_block with context %}
+{% block title %}{{ item.title }}{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{{ url_for('home') }}">Home</a> / <a href="{{ url_for('category', department=item.department) }}">{{ item.department }}</a> / <a href="{{ url_for('category', department=item.department, **{'class': item.class}) }}">{{ item.class }}</a> / Item #{{ item.id }}</nav>
+<section class="detail">
+  <div class="detail-img"><img src="{{ url_for('item_image', item_id=item.id) }}" alt="{{ item.title }}"></div>
+  <div class="detail-info">
+    <p class="eyebrow">{{ item.division }} · {{ item.class }}</p>
+    <h1>{{ item.title }}</h1>
+    <p class="muted">Item #{{ item.id }}</p>
+    <p class="lead">{{ item.description }}</p>
+    {% if item.n_reviews %}
+    <div class="summary">
+      <div><strong class="big">{{ item.avg_rating }}</strong><span class="stars">{{ item.avg_rating|stars }}</span><span class="muted small">{{ item.n_reviews }} review{{ '' if item.n_reviews == 1 else 's' }}</span></div>
+      <div><strong class="big">{{ item.pct_rec }}%</strong><span class="muted small">of buyers recommend this item</span></div>
+    </div>
+    <div class="bars">
+      {% for s in [5,4,3,2,1] %}
+      <div class="bar-row"><span>{{ s }}★</span><div class="bar"><i style="width: {{ (100 * star_counts.get(s, 0) / item.n_reviews)|round(1) }}%"></i></div><span class="muted">{{ star_counts.get(s, 0) }}</span></div>
+      {% endfor %}
+    </div>
+    {% else %}<p class="muted">No reviews yet. Be the first!</p>{% endif %}
+    <a class="btn" href="{{ url_for('new_review', item_id=item.id) }}">Write a review</a>
+  </div>
+</section>
+
+<section class="section" id="reviews">
+  <div class="section-head"><h2>Reviews</h2><span class="muted">{{ total }} total</span></div>
+  <div class="review-list">{% for r in reviews %}{{ review_block(r) }}{% endfor %}</div>
+  {{ pager(page, pages, 'item_page') }}
+</section>
+
+{% if similar %}
+<section class="section">
+  <div class="section-head"><h2>More in {{ item.class }}</h2></div>
+  <div class="grid">{% for it in similar %}{{ item_card(it) }}{% endfor %}</div>
+</section>
+{% endif %}
+{% endblock %}

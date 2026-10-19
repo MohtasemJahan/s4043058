@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import item_card, pager with context %}
+{% block title %}{{ department }}{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{{ url_for('home') }}">Home</a> / <a href="{{ url_for('category', department=department) }}">{{ department }}</a>{% if cls %} / {{ cls }}{% endif %}</nav>
+<div class="section-head"><h1>{{ cls or department }}</h1><span class="muted">{{ total }} item{{ '' if total == 1 else 's' }}</span></div>
+<div class="toolbar">
+  <div class="pills">
+    <a class="pill {{ 'active' if not cls }}" href="{{ url_for('category', department=department, sort=sort) }}">All</a>
+    {% for c, n in classes %}<a class="pill {{ 'active' if c == cls }}" href="{{ url_for('category', department=department, sort=sort, **{'class': c}) }}">{{ c }} <small>{{ n }}</small></a>{% endfor %}
+  </div>
+  <form method="get" class="sort">
+    {% if cls %}<input type="hidden" name="class" value="{{ cls }}">{% endif %}
+    <label>Sort by
+      <select name="sort" onchange="this.form.submit()">
+        {% for k, (label, _) in sorts.items() %}<option value="{{ k }}" {{ 'selected' if k == sort }}>{{ label }}</option>{% endfor %}
+      </select></label>
+  </form>
+</div>
+<div class="grid">{% for it in items %}{{ item_card(it) }}{% endfor %}</div>
+{{ pager(page, pages, 'category') }}
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}Write a review{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{{ url_for('home') }}">Home</a> / <a href="{{ url_for('item_page', item_id=item.id) }}">{{ item.title }}</a> / New review</nav>
+<div class="form-layout">
+  <aside class="mini-item">
+    <img src="{{ url_for('item_image', item_id=item.id) }}" alt="">
+    <h3>{{ item.title }}</h3><p class="muted small">Item #{{ item.id }} · {{ item.class }}</p>
+  </aside>
+  <form class="panel" method="post" action="{{ url_for('new_review', item_id=item.id) }}" novalidate>
+    <h1>Write a review</h1>
+    <p class="muted">Step 1 of 2 · Tell us what you think. We'll suggest whether it reads like a recommendation, and you can change it.</p>
+
+    <fieldset class="field">
+      <legend>Your rating</legend>
+      <div class="star-input">
+        {% for s in [5,4,3,2,1] %}
+        <input type="radio" id="r{{ s }}" name="rating" value="{{ s }}" {{ 'checked' if form.get('rating') == s|string }}><label for="r{{ s }}" title="{{ s }} star{{ '' if s == 1 else 's' }}">★</label>
+        {% endfor %}
+      </div>
+      {% if errors.rating %}<p class="err">{{ errors.rating }}</p>{% endif %}
+    </fieldset>
+
+    <div class="field">
+      <label for="title">Review title</label>
+      <input id="title" name="title" maxlength="80" placeholder="Sum it up in a few words" value="{{ form.get('title', '') }}" required>
+      {% if errors.title %}<p class="err">{{ errors.title }}</p>{% endif %}
+    </div>
+    <div class="field">
+      <label for="text">Your review</label>
+      <textarea id="text" name="text" rows="6" maxlength="600" placeholder="How is the fit, fabric and quality? Would you buy it again?" required>{{ form.get('text', '') }}</textarea>
+      <p class="muted small counter"><span id="count">0</span>/600</p>
+      {% if errors.text %}<p class="err">{{ errors.text }}</p>{% endif %}
+    </div>
+    <div class="field narrow">
+      <label for="age">Your age <span class="muted">(optional)</span></label>
+      <input id="age" name="age" inputmode="numeric" maxlength="3" value="{{ form.get('age', '') }}">
+      {% if errors.age %}<p class="err">{{ errors.age }}</p>{% endif %}
+    </div>
+    <div class="actions"><button class="btn" type="submit">Get recommendation →</button>
+      <a class="btn ghost" href="{{ url_for('item_page', item_id=item.id) }}">Cancel</a></div>
+  </form>
+</div>
+<script>
+  const t = document.getElementById('text'), c = document.getElementById('count');
+  const upd = () => c.textContent = t.value.length; t.addEventListener('input', upd); upd();
+</script>
+{% endblock %}

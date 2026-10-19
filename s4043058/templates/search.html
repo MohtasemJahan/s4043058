@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import item_card, pager with context %}
+{% block title %}Search{% endblock %}
+{% block content %}
+<div class="section-head"><h1>Search</h1></div>
+{% if not query %}
+  <p class="notice">Type a keyword above, for example <a href="{{ url_for('search', q='dresses') }}">dresses</a>, <a href="{{ url_for('search', q='jeans') }}">jeans</a> or <a href="{{ url_for('search', q='sweater') }}">sweater</a>.</p>
+{% elif total == 0 %}
+  <p class="notice warn" id="result-message">No items matched “{{ query }}”. Try a simpler word, like the type of clothing (dress, top, pants).</p>
+{% else %}
+  <p class="notice" id="result-message"><strong>{{ total }}</strong> clothing item{{ ' has' if total == 1 else 's have' }} matched “{{ query }}”.</p>
+  <div class="grid">{% for it in items %}{{ item_card(it) }}{% endfor %}</div>
+  {{ pager(page, pages, 'search') }}
+{% endif %}
+{% endblock %}

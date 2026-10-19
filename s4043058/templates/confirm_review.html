@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Confirm review{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{{ url_for('home') }}">Home</a> / <a href="{{ url_for('item_page', item_id=item.id) }}">{{ item.title }}</a> / Confirm review</nav>
+<div class="form-layout">
+  <aside class="mini-item">
+    <img src="{{ url_for('item_image', item_id=item.id) }}" alt="">
+    <h3>{{ item.title }}</h3><p class="muted small">Item #{{ item.id }} · {{ item.class }}</p>
+  </aside>
+  <form class="panel" method="post" action="{{ url_for('confirm_review', item_id=item.id) }}">
+    <h1>Confirm your review</h1>
+    <p class="muted">Step 2 of 2 · Check the recommendation, change it if it's not right, then publish.</p>
+
+    <div class="preview">
+      <span class="stars">{{ form.rating|int|stars }}</span>
+      <h4>{{ form.title }}</h4><p>{{ form.text }}</p>
+    </div>
+
+    <div class="suggest {{ 'yes' if label else 'no' }}" id="suggestion">
+      <p class="eyebrow">Our model suggests</p>
+      <p class="verdict">{{ 'Recommended' if label else 'Not recommended' }}</p>
+      <p class="muted small">Based on your review text, the model is {{ ((prob if label else 1 - prob) * 100)|round|int }}% confident this reviewer {{ 'recommends' if label else "doesn't recommend" }} the item.</p>
+    </div>
+
+    <fieldset class="field">
+      <legend>Does this match how you feel? Choose your final answer:</legend>
+      <div class="choice">
+        <input type="radio" id="f1" name="final_label" value="1" {{ 'checked' if label == 1 }}>
+        <label for="f1"><strong>✓ Recommended</strong><span>I'd recommend this item to others</span></label>
+        <input type="radio" id="f0" name="final_label" value="0" {{ 'checked' if label == 0 }}>
+        <label for="f0"><strong>✕ Not recommended</strong><span>I wouldn't recommend this item</span></label>
+      </div>
+    </fieldset>
+
+    {% for k in ['title', 'text', 'rating', 'age'] %}<input type="hidden" name="{{ k }}" value="{{ form[k] }}">{% endfor %}
+    <div class="actions"><button class="btn" type="submit">Publish review</button>
+      <button class="btn ghost" type="submit" name="edit" value="1" formaction="{{ url_for('new_review', item_id=item.id) }}">← Edit review</button></div>
+  </form>
+</div>
+{% endblock %}

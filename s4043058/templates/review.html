@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import review_block with context %}
+{% block title %}{{ review.title }}{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{{ url_for('home') }}">Home</a> / <a href="{{ url_for('item_page', item_id=item.id) }}">{{ item.title }}</a> / Review #{{ review.id }}</nav>
+{% if review.new %}<p class="notice good" id="saved-message">✓ Thank you! Your review has been published and is now visible on the item page.</p>{% endif %}
+<div class="form-layout">
+  <aside class="mini-item">
+    <a href="{{ url_for('item_page', item_id=item.id) }}"><img src="{{ url_for('item_image', item_id=item.id) }}" alt=""></a>
+    <h3>{{ item.title }}</h3><p class="muted small">Item #{{ item.id }} · {{ item.class }}</p>
+    <a class="btn ghost" href="{{ url_for('item_page', item_id=item.id) }}">View item</a>
+  </aside>
+  <div class="panel">
+    <h1>Review #{{ review.id }}</h1>
+    {{ review_block(review) }}
+    {% if review.new and review.model_label is not none %}
+      <p class="muted small">Model suggestion: {{ 'Recommended' if review.model_label else 'Not recommended' }}
+        {% if review.model_label == review.recommended %}· confirmed by the reviewer{% else %}· <strong>overridden by the reviewer</strong>{% endif %}</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

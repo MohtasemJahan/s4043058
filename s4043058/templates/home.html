@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import item_card, review_block with context %}
+{% block title %}Home{% endblock %}
+{% block hero %}
+<section class="banner">
+  <div class="wrap banner-inner">
+    <div class="banner-text">
+      <p class="kicker">New season · Real reviews</p>
+      <h1>Dress sharp.<br>Shop smart.</h1>
+      <p class="banner-sub">{{ '{:,}'.format(stats.n_items) }} pieces backed by {{ '{:,}'.format(stats.n_reviews) }} honest buyer reviews. Every review says whether it's recommended.</p>
+      <a class="cta" href="{{ url_for('category', department='Dresses') }}">Shop the edit <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="banner-art" aria-hidden="true">
+      {% for it in featured[:3] %}<img src="{{ url_for('item_image', item_id=it.id) }}" alt="">{% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="tiles">
+  {% for t in tiles %}
+  <a class="tile" href="{{ url_for('category', department=t.department) }}">
+    <img src="{{ url_for('item_image', item_id=t.item) }}" alt="" loading="lazy">
+    <span class="tile-text"><strong>{{ t.department }}</strong><em>{{ t.count }} styles · Shop now →</em></span>
+  </a>
+  {% endfor %}
+</section>
+
+
+
+<section class="section">
+  <div class="section-head"><h2>Shop by department</h2></div>
+  <div class="dept-grid">
+    {% for d in dept_order %}
+    <a class="dept" href="{{ url_for('category', department=d) }}">
+      <h3>{{ d }}</h3>
+      <p>{{ blurb.get(d, '') }}</p>
+      <span class="muted small">{{ departments[d].count }} items →</span>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Top picks</h2><span class="muted">Highly rated, widely reviewed</span></div>
+  <div class="grid">{% for it in featured %}{{ item_card(it) }}{% endfor %}</div>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Most reviewed</h2><span class="muted">What shoppers are talking about</span></div>
+  <div class="grid">{% for it in popular %}{{ item_card(it) }}{% endfor %}</div>
+</section>
+
+{% if latest %}
+<section class="section">
+  <div class="section-head"><h2>Latest reviews from our shoppers</h2></div>
+  <div class="review-list">{% for r in latest %}{{ review_block(r, True, items[r.item]) }}{% endfor %}</div>
+</section>
+{% endif %}
+{% endblock %}

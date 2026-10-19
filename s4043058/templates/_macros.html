@@ -1,0 +1,42 @@
+{% macro item_card(it) %}
+<a class="card" href="{{ url_for('item_page', item_id=it.id) }}">
+  <div class="card-img"><img src="{{ url_for('item_image', item_id=it.id) }}" alt="" loading="lazy"><span class="chip">{{ it.class }}</span></div>
+  <div class="card-body">
+    <h3>{{ it.title }}</h3>
+    <p class="muted small">Item #{{ it.id }} · {{ it.department }}</p>
+    {% if it.n_reviews %}
+      <p class="rating"><span class="stars" aria-hidden="true">{{ it.avg_rating|stars }}</span> {{ it.avg_rating }}
+        <span class="muted">({{ it.n_reviews }})</span></p>
+      <p class="rec {{ 'good' if it.pct_rec >= 70 else 'mid' }}">{{ it.pct_rec }}% recommend</p>
+    {% else %}<p class="muted small">No reviews yet</p>{% endif %}
+  </div>
+</a>
+{% endmacro %}
+
+{% macro pager(page, pages, endpoint) %}
+{% if pages > 1 %}
+<nav class="pager" aria-label="Pages">
+  {% if page > 1 %}<a href="{{ page_url(page - 1) }}">← Previous</a>{% endif %}
+  <span>Page {{ page }} of {{ pages }}</span>
+  {% if page < pages %}<a href="{{ page_url(page + 1) }}">Next →</a>{% endif %}
+</nav>
+{% endif %}
+{% endmacro %}
+
+{% macro badge(rec) %}
+<span class="badge {{ 'yes' if rec else 'no' }}">{{ '✓ Recommends this item' if rec else '✕ Does not recommend' }}</span>
+{% endmacro %}
+
+{% macro review_block(r, show_item=False, item=None) %}
+<article class="review {{ 'is-new' if r.new }}">
+  <div class="review-head">
+    <span class="stars" aria-label="{{ r.rating }} out of 5">{{ r.rating|stars }}</span>
+    {{ badge(r.recommended) }}
+    {% if r.new %}<span class="new-tag">New</span>{% endif %}
+  </div>
+  <h4><a href="{{ url_for('review_page', review_id=r.id) }}">{{ r.title }}</a></h4>
+  <p>{{ r.text }}</p>
+  <p class="muted small">{% if r.age %}Reviewer aged {{ r.age }}{% else %}Verified buyer{% endif %}{% if r.helpful %} · {{ r.helpful }} found this helpful{% endif %}
+    {% if show_item and item %} · on <a href="{{ url_for('item_page', item_id=item.id) }}">{{ item.title }}</a>{% endif %}</p>
+</article>
+{% endmacro %}

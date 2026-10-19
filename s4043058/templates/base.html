@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}SLEEK AU{% endblock %} · SLEEK AU</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap header-row">
+    <a class="logo" href="{{ url_for('home') }}" aria-label="SLEEK AU home"><b>SLEEK</b><i>AU</i></a>
+    <nav class="main-nav" aria-label="Main">
+      <a href="{{ url_for('home') }}" class="{{ 'on' if request.endpoint == 'home' }}">Home</a>
+      {% for d in nav_departments %}<a href="{{ url_for('category', department=d) }}" class="{{ 'on' if request.view_args and request.view_args.get('department') == d }}">{{ d }}</a>{% endfor %}
+    </nav>
+    <form class="search" action="{{ url_for('search') }}" method="get" role="search">
+      <input type="search" id="site-search" name="q" value="{{ q }}" placeholder="Search dresses, jeans, blouses…" aria-label="Search items" autocomplete="off">
+      <button type="submit" aria-label="Search">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      </button>
+    </form>
+  </div>
+</header>
+{% block hero %}{% endblock %}
+
+<main class="wrap">
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>SLEEK AU · COSC2815 Assignment 3, Milestone II</span>
+    <span>Recommendations are suggested by a logistic-regression model trained on review text.</span>
+  </div>
+</footer>
+</body>
+</html>

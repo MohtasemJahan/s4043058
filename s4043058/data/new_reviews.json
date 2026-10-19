@@ -1,0 +1,50 @@
+[
+ {
+  "id": 19662,
+  "item": 1095,
+  "age": 0,
+  "title": "Fabric",
+  "text": "The quality of the fabric is superb !",
+  "rating": 5,
+  "recommended": 0,
+  "helpful": 0,
+  "model_label": 0,
+  "new": true
+ },
+ {
+  "id": 19663,
+  "item": 1110,
+  "age": 0,
+  "title": "Material",
+  "text": "Beautiful dress, love the shape and overall service. Great dress",
+  "rating": 5,
+  "recommended": 0,
+  "helpful": 0,
+  "model_label": 1,
+  "new": true
+ },
+ {
+  "id": 19664,
+  "item": 1094,
+  "age": 0,
+  "title": "Quality",
+  "text": "the quality is great, loved the product and great service",
+  "rating": 5,
+  "recommended": 0,
+  "helpful": 0,
+  "model_label": 1,
+  "new": true
+ },
+ {
+  "id": 19665,
+  "item": 1081,
+  "age": 0,
+  "title": "Quality",
+  "text": "The quality is greattt",
+  "rating": 5,
+  "recommended": 1,
+  "helpful": 0,
+  "model_label": 0,
+  "new": true
+ }
+]
